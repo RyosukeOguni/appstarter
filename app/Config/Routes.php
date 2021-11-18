@@ -2,13 +2,15 @@
 
 namespace Config;
 
+use function PHPUnit\Framework\any;
+
 // Create a new instance of our RouteCollection class.
 $routes = Services::routes();
 
 // Load the system's routing file first, so that the app and ENVIRONMENT
 // can override as needed.
 if (file_exists(SYSTEMPATH . 'Config/Routes.php')) {
-    require SYSTEMPATH . 'Config/Routes.php';
+  require SYSTEMPATH . 'Config/Routes.php';
 }
 
 /*
@@ -31,7 +33,12 @@ $routes->setAutoRoute(true);
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
+$routes->match(['get','post'],'news/create', 'News::create');
+$routes->get('news/(:segment)', 'News::view/$1');
+$routes->get('news', 'News::index');
+$routes->get('(:any)', 'Pages::showme/$1');
 $routes->get('/', 'Home::index');
+$routes->get('(:any)', 'Pages::showme/$1');
 
 /*
  * --------------------------------------------------------------------
@@ -47,5 +54,5 @@ $routes->get('/', 'Home::index');
  * needing to reload it.
  */
 if (file_exists(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {
-    require APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php';
+  require APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php';
 }
